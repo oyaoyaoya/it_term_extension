@@ -1,0 +1,31 @@
+
+= form_for(@term) do |f|
+  ul style="list-style: none;"
+    li
+      = f.label :name
+    li
+      = f.text_field :name
+    li
+      = f.label :description
+    li
+      = f.text_field :description
+    li
+      = f.label :url
+    li
+      = f.text_field :url
+    br
+    li
+      = f.fields_for :samples do |s|
+        ul.samples style="list-style: none;"
+          li
+            = s.label :name
+          li
+            = s.text_field :name
+          li
+            = s.label :url
+          li
+            = s.text_field :url
+    button.add_sample type="button"
+      | 押してね
+
+  = f.submit "提出"

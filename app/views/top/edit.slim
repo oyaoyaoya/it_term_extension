@@ -1,0 +1,904 @@
+p
+  | データベースに保存されたデータを画面に表示できるようにしましょう
+h1
+  | ダイジェスト動画
+h3
+  i.icon.attention
+  |  ダイジェスト動画は、本章の中での作業マークの部分でどのような作業をし、どのような結果になれば良いかのみを解説する動画です。
+p
+  | ※カリキュラム自体の解説はしておりませんので、ご了承ください。
+  br
+  |  作業マークがある箇所で何をすれば良いかわからない、結果が正しいか確認したいといった場合に、ダイジェスト動画を御覧ください。
+  br
+  iframe[width="420" height="315" src="https://www.youtube.com/embed/Rj6R-8EEUo0" frameborder="0" allowfullscreen]
+  br
+  iframe[width="420" height="315" src="https://www.youtube.com/embed/gkZfFwbScfI" frameborder="0" allowfullscreen]
+h1
+  | ビューにデータを受け渡す
+p
+  | Railsでの処理が
+  strong
+    | ルーティング→コントローラ→ビューの順番
+  | で進むことは以前に学習しました。その際にコントローラの役割を、リクエストに応じたビューをレスポンスとして返すことだと説明しました。実はそれだけでなく、
+  strong
+    | コントローラのアクションの中で何らかの処理を行うことも可能
+  | なのです。本章ではその中でも最も良く利用する、コントローラからビューにデータを受け渡しそのデータをビューで表示する、という処理を実装します。
+p
+  img[src="https://tech-master.s3.amazonaws.com/uploads/curriculums/images/Rails1-4/001.png" alt="ビューにデータを受け渡す"]
+h2
+  | コントローラで受け取ったデータをビューで表示しよう
+p
+  | 前章では、テーブルから情報を引き出す方法を学びました。本項では、コントローラ内のアクションで定義した情報を見た目に反映させる方法を学びます。
+h3
+  | コントローラに、ビューに表示したい情報を定義する
+p
+  strong
+    | コントローラのアクション内に定義したインスタンス変数(@つきの名前の変数)は、そのアクションが表示するビュー内で利用することができます。
+p
+  | 早速、
+  code
+    | tweets_controller
+  | の
+  code
+    | indexアクション
+  | と
+  code
+    | index.html.erb
+  | を利用して確認してみましょう。
+h3
+  i.icon.pen
+  |  tweets_controller.rbを以下のように編集しましょう
+ul.filetree
+  li.t-folder
+    |  app 
+    ul
+      li.t-folder
+        |  controllers 
+        ul
+          li.t-file
+            |  tweets_controller.rb
+.code-frame[data-lang="ruby"]
+  .code-lang
+    span.bold
+      | app/controlers/tweets_controller.rb
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1 2 3 4 5 6 7
+      td.code
+        .highlight
+          pre
+            span.k
+              | class
+            span.nc
+              | TweetsController
+            span.o
+              | <
+            span.no
+              | ApplicationController
+            span.k
+              | def
+            span.nf
+              | index
+            span.hll
+              span.vi
+                | @tweet
+              span.o
+                | =
+              span.s2
+                | "プログラミングなう"
+            span.k
+              | end
+            span.k
+              | end
+p
+  curriculum-checkbox[data-id="301"]
+p
+  curriculum-checkbox[data-id="302"]
+h3
+  | 受け取ったデータをビューで表示する
+p
+  | 先ほどの編集によってビューに
+  code
+    | @tweet = "プログラミングなう"
+  | という情報が渡されたはずです。続いて、ビューに渡されたデータを実際に表示します。
+h3
+  i#term_309.icon.information
+  |  インスタンス変数の呼び出し範囲
+p
+  | 先ほどの作業で、インスタンス変数を
+  code
+    | tweets_controller
+  | の
+  code
+    | index
+  | アクションの中で定義しました。その場合このインスタンス変数は、
+  code
+    | index
+  | アクションに対応したビューである
+  code
+    | app/views/tweets/index.html.erb
+  | の中で利用できます。
+p
+  | Railsの見た目用のファイルである
+  code
+    | erb
+  | ファイルの中でRubyのコードを利用する場合、
+  code
+    | <%= %>
+  | という記述で囲います。
+h3
+  i.icon.pen
+  |  index.html.erbを以下のように編集しましょう
+ul.filetree
+  li.t-folder
+    |  app 
+    ul
+      li.t-folder
+        |  views 
+        ul
+          li.t-folder
+            |  tweets 
+            ul
+              li.t-file
+                |  index.html.erb
+.code-frame[data-lang="html"]
+  .code-lang
+    span.bold
+      | app/views/tweets/index.html.erb
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1
+      td.code
+        .highlight
+          pre
+            span.hll
+              span.err
+                | <
+              | %= @tweet %> 
+p
+  curriculum-checkbox[data-id="303"]
+p
+  | ビューで、定義した
+  strong
+    | 変数を使用するためには
+    code
+      | <%= %>
+    | で変数名を囲んであげる
+  | 必要があります。
+  code
+    | <%= %>
+  | の中のrubyコードは、ビューをレスポンスとして返すまでに実行されて、最終的にはHTMLになります。
+p
+  | 繰り返しますが、
+  code
+    | <%= %>
+  | を利用するにはビューの拡張子が
+  code
+    | .erb
+  | になっている必要があります。
+.code-frame[data-lang="html"]
+  .code-lang
+    span.bold
+      | viewファイル
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1
+      td.code
+        .highlight
+          pre
+            span.err
+              | <
+            | %= 変数名 %> #変数をビュー内で使用 
+p
+  | これでビューにデータを受け渡し、表示させるということができているはずです。そこで、実際にサーバーを立ち上げて確認してみましょう。
+h3
+  i.icon.pen
+  |  ターミナルで下記のコマンドを実行しましょう
+.code-frame[data-lang="bash"]
+  .code-lang
+    span.bold
+      | ターミナル
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1 2 3 4 5
+      td.code
+        .highlight
+          pre
+            span.nv
+              | $ 
+            span.nb
+              | cd
+            |  ~/projects/pictweet 
+            span.c
+              | # アプリケーションのあるディレクトリに移動
+            span.nv
+              | $ 
+            | rails s 
+            span.c
+              | # テストサーバーを起動
+h3
+  i.icon.pen
+  |  ブラウザで下記のURLにアクセスしましょう
+p
+  | 下記のURLにアクセスすると、下の画像のような状態になるはずです。
+h4
+  a[href="http://localhost:3000/tweets" target="_blank"]
+    | http://localhost:3000/tweets
+p
+  img[src="https://tech-master.s3.amazonaws.com/uploads/curriculums/images/Rails1-4/programming_now.png" alt="プログラミングなう"]
+p
+  curriculum-checkbox[data-id="304"]
+p
+  curriculum-checkbox[data-id="305"]
+h1
+  | モデルを利用してデータを表示する
+p
+  | 前の項では、コントローラからビューにデータを受け渡して、表示するということを学びました。本項では前章で学習したモデルを利用して、アクションの中でデータベースの値を取り出しビューへ受け渡し、その情報を表示させます。
+h2
+  | データベースの値をビューに表示しよう
+h3
+  | tweetsテーブルのレコードの情報をビューに表示
+p
+  | まずは、1つのtweetの情報をデータベースから取ってきて、ビューに表示してみましょう。
+p
+  | コントローラにて、データベースからひとつのtweetの情報を取ってきます。
+h3
+  i.icon.pen
+  |  tweets_controller.rbを以下のように編集しましょう
+ul.filetree
+  li.t-folder
+    |  app 
+    ul
+      li.t-folder
+        |  controllers 
+        ul
+          li.t-file
+            |  tweets_controller.rb
+.code-frame[data-lang="ruby"]
+  .code-lang
+    span.bold
+      | app/controlers/tweets_controller.rb
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1 2 3 4 5 6 7
+      td.code
+        .highlight
+          pre
+            span.k
+              | class
+            span.nc
+              | TweetsController
+            span.o
+              | <
+            span.no
+              | ApplicationController
+            span.k
+              | def
+            span.nf
+              | index
+            span.hll
+              span.vi
+                | @tweet
+              span.o
+                | =
+              span.no
+                | Tweet
+              span.o
+                | .
+              span.n
+                | find
+              span.p
+                | (
+              span.mi
+                | 3
+              span.p
+                | )
+            span.k
+              | end
+            span.k
+              | end
+p
+  | これで、index.html.erb上で@tweetという変数を利用できるようになりました。findメソッドは引数に指定したidにあたるレコードを1件だけ取得するメソッドでした。
+  br
+  |  @tweetには、tweetsテーブルのレコード1行が、Tweetクラスのインスタンスとして代入されています。早速、ビューにて@tweetの値を表示させてみましょう。
+h3
+  i.icon.pen
+  |  index.html.erbを以下のように編集しましょう
+ul.filetree
+  li.t-folder
+    |  app 
+    ul
+      li.t-folder
+        |  views 
+        ul
+          li.t-folder
+            |  tweets 
+            ul
+              li.t-file
+                |  index.html.erb
+.code-frame[data-lang="rhtml"]
+  .code-lang
+    span.bold
+      | app/views/tweets/index.html.erb
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1 2 3
+      td.code
+        .highlight
+          pre
+            span.hll
+              span.nt
+                | <div
+              span.na
+                | class=
+              span.s
+                | "contents row"
+              span.nt
+                | >
+            span.hll
+              span.nt
+                | <p>
+              span.cp
+                | <%=
+              span.vi
+                | @tweet
+              span.o
+                | .
+              span.n
+                | text
+              span.cp
+                | %>
+              span.nt
+                | </p>
+            span.hll
+              span.nt
+                | </div>
+p
+  | こうすることで、localhost:3000/tweetsにアクセスした際、@tweetに代入されているtweetsテーブルのレコードの、textカラムの値が表示されるようになります。
+h3
+  i#term_316.icon.information
+  |  プロパティ値
+p
+  | ここでプロパティ値とは各カラムに保存されている値のことを指します。
+p
+  | 編集したindex.html.erbの@tweet.textという記述に注目してください。この記述の@tweetという変数はtweetsテーブルの１つのインスタンスを示しています。その場合、「変数.カラム名」と記述することによって、そのインスタンスのプロパティ値を取り出すことができます。
+p
+  | 以下の例を参考にしてみましょう。まずはtweetという変数にtweetモデルのインスタンスを定義します。そして、そのインスタンスに対して「.カラム名」と記述することによって、そのプロパティ値を取り出すことができます。
+p
+  img[src="https://qiita-image-store.s3.amazonaws.com/0/40796/cf685396-7eac-fd51-7dc7-ce4fd322cdb7.png" alt="スクリーンショット 2016-01-22 14.44.42.png"]
+p
+  | ここでブラウザの表示を確認してみましょう。
+h3
+  i.icon.pen
+  |  ブラウザで下記のURLにアクセスしましょう
+h4
+  a[href="http://localhost:3000/tweets" target="_blank"]
+    | http://localhost:3000/tweets
+p
+  img[src="https://tech-master.s3.amazonaws.com/uploads/curriculums/images/Rails1-4/009.png" alt="部分テンプレート"]
+p
+  | 表示が確認できましたら、次に複数のtweetの情報を1つのtweetごとに繰り返し順番に表示します。
+h3
+  i.icon.happy
+  |  参考書参照
+h4
+  | 「プロになるためのWeb技術入門」p29 ~, 項2.3, 項2.4, 項2.5
+h2
+  | 複数のデータをビューに表示しよう
+h3
+  i.icon.pen
+  |  tweets_controller.rbを以下のように編集しましょう
+ul.filetree
+  li.t-folder
+    |  app 
+    ul
+      li.t-folder
+        |  controllers 
+        ul
+          li.t-file
+            |  tweets_controller.rb
+.code-frame[data-lang="ruby"]
+  .code-lang
+    span.bold
+      | app/controlers/tweets_controller.rb
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1 2 3 4 5 6 7
+      td.code
+        .highlight
+          pre
+            span.k
+              | class
+            span.nc
+              | TweetsController
+            span.o
+              | <
+            span.no
+              | ApplicationController
+            span.k
+              | def
+            span.nf
+              | index
+            span.hll
+              span.vi
+                | @tweets
+              span.o
+                | =
+              span.no
+                | Tweet
+              span.o
+                | .
+              span.n
+                | all
+            span.k
+              | end
+            span.k
+              | end
+p
+  curriculum-checkbox[data-id="306"]
+p
+  | 上記の編集によってビューにツイートテーブルの全てのレコードがインスタンスの配列として受け渡されました。これからそれらの情報をビューに表示させていきます。
+p
+  | その際、Rubyのカリキュラム内で学習したeachメソッドを利用する方法で複数のtweetを表示していきます。
+h3
+  i.icon.pen
+  |  index.html.erbを以下のように編集しましょう
+ul.filetree
+  li.t-folder
+    |  app 
+    ul
+      li.t-folder
+        |  views 
+        ul
+          li.t-folder
+            |  tweets 
+            ul
+              li.t-file
+                |  index.html.erb
+.code-frame[data-lang="rhtml"]
+  .code-lang
+    span.bold
+      | app/views/tweets/index.html.erb
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1 2 3 4 5
+      td.code
+        .highlight
+          pre
+            span.nt
+              | <div
+            span.na
+              | class=
+            span.s
+              | "contents row"
+            span.nt
+              | >
+            span.hll
+              span.cp
+                | <%
+              span.vi
+                | @tweets
+              span.o
+                | .
+              span.n
+                | each
+              span.k
+                | do
+              span.o
+                | |
+              span.n
+                | tweet
+              span.o
+                | |
+              span.cp
+                | %>
+            span.hll
+              span.nt
+                | <p>
+              span.cp
+                | <%=
+              span.n
+                | tweet
+              span.o
+                | .
+              span.n
+                | text
+              span.cp
+                | %>
+              span.nt
+                | </p>
+            span.hll
+              span.cp
+                | <%
+              span.k
+                | end
+              span.cp
+                | %>
+            span.nt
+              | </div>
+p
+  | このようにすると、eachメソッドの
+  code
+    | do
+  | と
+  code
+    | end
+  | で囲まれた
+  code
+    | <%= tweet.text %>
+  | の部分を、@tweetsのレコードの数だけ繰り返し表示するようになります。
+p
+  curriculum-checkbox[data-id="308"]
+h3
+  i.icon.pen
+  |  ブラウザで下記のURLにアクセスしましょう
+h4
+  a[href="http://localhost:3000/tweets" target="_blank"]
+    | http://localhost:3000/tweets
+p
+  | ※テストサーバーを立ち上げていない場合にはもう一度「rails s」コマンドでサーバーを起動する必要があります。
+p
+  img[src="https://tech-master.s3.amazonaws.com/uploads/curriculums/images/Rails1-4/006.png" alt="サンプルtweets"]
+h1
+  | レイアウトを変更する
+p
+  | 先ほど作成したビューは装飾がなく素っ気ないものでした。そこで、このビューにHTML、CSSファイルを適用して装飾を加えて見本のPictweetのような見た目にします。
+h2
+  | ヘッダー部分を完成させよう
+p
+  | まず、Pictweetのヘッダー部分を完成させます。ヘッダー部分は全ページ共通なので、見た目の雛形である
+  code
+    | application.html.erb
+  | に書きます。
+p
+  | ここでは予め見た目を決定するHTMLを書いたファイルを用意しているのでこちらを利用しましょう。
+h3
+  i.icon.pen
+  |  application.html.erbを以下のリンク先ファイルの内容と置き換えましょう
+h4
+  a[href="/filedownload/1" target="_blank"]
+    | application.html.erb
+ul.filetree
+  li.t-folder
+    |  app 
+    ul
+      li.t-folder
+        |  views 
+        ul
+          li.t-folder
+            |  layouts 
+            ul
+              li.t-file
+                |  application.html.erb
+p
+  curriculum-checkbox[data-id="312"]
+h2
+  | 改行を適応させよう
+p
+  | デフォルトの状態ではrailsは文字列の改行を読み込まず、改行した状態で文章を表示させることはできません。改行がしっかりと適応されるようにするためにはsimple_formatというメソッドを使う必要があります。
+h3
+  i#term_1085.icon.information
+  |  simple_format
+p
+  | simple_formatメソッドは下記の条件で文字列を加工してくれるメソッドです。今回はこのメソッドを使って改行を反映したツイートをビューに表示にさせます。
+h4
+  | ①改行は
+  code
+    | <br/>
+  | を付与
+h4
+  | ②文字列を
+  code
+    | <p>
+  | で括る
+p
+  | 【例】
+.code-frame[data-lang="html"]
+  .code-lang
+    span.bold
+      | app/views/test/sample.html.erb
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1
+      td.code
+        .highlight
+          pre
+            span.err
+              | <
+            | %= simple_format(引数) %> 
+h3
+  i.icon.pen
+  |  index.html.erbを以下のように編集しましょう
+.code-frame[data-lang="html"]
+  .code-lang
+    span.bold
+      | app/views/tweets/index.html.erb
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1 2 3 4 5 6 7 8
+      td.code
+        .highlight
+          pre
+            span.nt
+              | <div
+            span.na
+              | class=
+            span.s
+              | "contents row"
+            span.nt
+              | >
+            span.err
+              | <
+            | % @tweets.each do |tweet| %> 
+            span.hll
+              span.nt
+                | <div
+              span.na
+                | class=
+              span.s
+                | "content_post"
+              span.na
+                | style=
+              span.s
+                | "background-image: url(<%= tweet.image %>);"
+              span.nt
+                | >
+            span.hll
+              span.err
+                | <
+              | %= simple_format(tweet.text) %> 
+            span.hll
+              span.nt
+                | <span
+              span.na
+                | class=
+              span.s
+                | "name"
+              span.nt
+                | >
+              span.err
+                | <
+              | %= tweet.name %>
+              span.nt
+                | </span>
+            span.hll
+              span.nt
+                | </div>
+            span.err
+              | <
+            | % end %> 
+            span.nt
+              | </div>
+p
+  | tweet.textで取得したツイートの本文をsimple_formatによって加工しています。この処理によってツイートの改行が反映されるようになります。
+h3
+  i#term_317.icon.information
+  |  ヘルパーメソッド
+p
+  code
+    | simple_format
+  | のように、Railsでは主にviewでHTMLタグを出現させたりテキストを加工するために予めメソッドが用意されています。これらをまとめて、
+  strong
+    | ヘルパーメソッド
+  | といいます。他には、
+  code
+    | form_tag
+  | (フォームを出現させるメソッド)や
+  code
+    | link_to
+  | (aタグを出現させるメソッド)などがあります。
+p
+  curriculum-checkbox[data-id="315"]
+h2
+  | CSSファイルを適用しましょう
+p
+  | HTMLファイルの適用が終わったので、続いてCSSファイルの適用を行なっていきます。
+h3
+  i#term_319.icon.information
+  |  stylesheet_link_tag
+p
+  | CSSファイルの読込みはHTMLのヘッダー部分の
+  code
+    | stylesheet_link_tag
+  | から読み込まれます。Railsの場合レイアウトファイルがあるので、
+  code
+    | application.html.erb
+  | にヘッダーの記述があります。
+  code
+    | application.html.erb
+  | の3行目に注目してください。
+.code-frame[data-lang="rhtml"]
+  .code-lang
+    span.bold
+      | app/views/layouts/application.html.erb
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1 2 3 4 5 6
+      td.code
+        .highlight
+          pre
+            span.nt
+              | <head>
+            span.nt
+              | <title>
+            | Pictweet
+            span.nt
+              | </title>
+            span.cp
+              | <%=
+            span.n
+              | stylesheet_link_tag
+            span.s1
+              | 'application'
+            span.p
+              | ,
+            span.ss
+              | media
+            span.p
+              | :
+            span.s1
+              | 'all'
+            span.p
+              | ,
+            span.s1
+              | 'data-turbolinks-track'
+            span.o
+              | =>
+            span.kp
+              | true
+            span.cp
+              | %>
+            span.cp
+              | <%=
+            span.n
+              | javascript_include_tag
+            span.s1
+              | 'application'
+            span.p
+              | ,
+            span.s1
+              | 'data-turbolinks-track'
+            span.o
+              | =>
+            span.kp
+              | true
+            span.cp
+              | %>
+            span.cp
+              | <%=
+            span.n
+              | csrf_meta_tags
+            span.cp
+              | %>
+            span.nt
+              | </head>
+p
+  | cssファイルは
+  code
+    | app/assets/stylesheets/
+  | というディレクトリに配置します。application.html.erbの
+  code
+    | stylesheet_link_tag
+  | の部分に
+  code
+    | application
+  | と書いてあるので、このHTMLからはapp/assets/stylesheets/application.cssというCSSファイルを読み込むことを示しています。
+h3
+  i#term_320.icon.information
+  |  require_tree
+p
+  code
+    | application.css
+  | の13行目に注目してください。
+ul.filetree
+  li.t-folder
+    |  app 
+    ul
+      li.t-folder
+        |  assets 
+        ul
+          li.t-folder
+            |  stylesheets 
+            ul
+              li.t-file
+                |  application.css
+.code-frame[data-lang="ruby"]
+  .code-lang
+    span.bold
+      | app/assets/stylesheets/application.css
+  table.highlighttable
+    tr
+      td.linenos
+        .linenodiv
+          pre
+            | 1 2 3 4 5 6
+      td.code
+        .highlight
+          pre
+            span.sr
+              | /*
+            span.sr
+              |  ## 中略 ##
+            span.sr
+              |  *
+            span.sr
+              |  *= require_tree .
+            span.sr
+              |  *= require_self
+            span.sr
+              |  */
+p
+  | application.cssには、どのcssを読み込むかという設定が書いてあります。
+  code
+    | require_tree
+  | には引数として与えられたディレクトリ以下のcssファイルをアルファベット順に全て読み込むという意味があります。現在require_treeの引数には.(ドット)が渡されています。
+  code
+    | 引数.(ドット)はカレントディレクトリを表します。
+  | つまり、この記述によって
+  code
+    | app/assets/stylesheets
+  | というディレクトリにあるcssファイルは全て読み込まれることになります。
+h3
+  i.icon.pen
+  |  リンク先のファイルをダウンロードして「style.scss」と「setting.css」を下記のディレクトリに配置しましょう
+p
+  i.icon.attention
+  | なんどもダウンロードするとファイル名に（１）（２）が付き正しく反映されない可能性があるのでファイル名に注意しましょう。
+h4
+  a[href="/filedownload/2" target="_blank"]
+    | style.scss
+h4
+  a[href="/filedownload/3" target="_blank"]
+    | setting.css
+p
+  img[src="https://tech-master.s3.amazonaws.com/uploads/curriculums//0726c74ee970d2a69f687dc6055b0708.gif" alt="https://tech-master.s3.amazonaws.com/uploads/curriculums//0726c74ee970d2a69f687dc6055b0708.gif"]
+p
+  strong
+    | ※ファイルを追加する際には既に存在するファイルは削除しないでください
+ul.filetree
+  li.t-folder
+    |  app 
+    ul
+      li.t-folder
+        |  assets 
+        ul
+          li.t-folder
+            |  stylesheets 
+            ul
+              li.t-file
+                |  style.scss
+              li.t-file
+                |  setting.css
