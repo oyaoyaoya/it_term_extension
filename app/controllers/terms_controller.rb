@@ -6,7 +6,7 @@ class TermsController < ApplicationController
   end
 
   def create
-    @term = Term.new(term_params)
+    @term = Term.new(name: params[:name], description: params[:description])
     if @term.save
       redirect_to new_term_path
     else
