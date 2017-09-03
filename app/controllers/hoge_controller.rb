@@ -15,20 +15,20 @@ class TermsController < ApplicationController
     end
   end
 
-    def index
-      respond_to do |format|
-        format.html
-        format.json do
-          keyword = params[:keyword].gsub(/(\r\n|\r|\n)/, "")
-          @terms = Term.where("name like '%#{keyword}%'")
-          # @samples = []
-          # @terms.each do |term|
-          #   binding.pry
-          #   @samples << term.samples
-          # end
-        end
+  def index
+    respond_to do |format|
+      format.html
+      format.json do
+        keyword = params[:keyword].gsub(/(\r\n|\r|\n)/, "")
+        @terms = Term.where("name like ?", keyword)
+        # @samples = []
+        # @terms.each do |term|
+        #   binding.pry
+        #   @samples << term.samples
+        # end
       end
     end
+  end
 
   private
 end
