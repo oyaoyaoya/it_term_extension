@@ -1,16 +1,17 @@
-
 class TermsController < ApplicationController
   def new
+    Term.find(1)
     @term = Term.new
     @term.samples.build
   end
 
   def create
-    @term = Term.new(term_params)
+    Term.find(1)
+    @term = Term.new(name: params[:name], description: params[:description])
     if @term.save
-      redirect_to new_term_path
+      redirect_to "terms/new"
     else
-      render action: :new
+      render action => :new
     end
   end
 
@@ -19,7 +20,7 @@ class TermsController < ApplicationController
       format.html
       format.json do
         keyword = params[:keyword].gsub(/(\r\n|\r|\n)/, "")
-        @terms = Term.where("name like '%#{keyword}%'")
+        @terms = Term.where("name like ?", keyword)
         # @samples = []
         # @terms.each do |term|
         #   binding.pry
@@ -30,8 +31,4 @@ class TermsController < ApplicationController
   end
 
   private
-
-  def term_params
-    params.require(:term).permit(:name, :description, :url, samples_attributes: [:name, :url])
-  end
 end
